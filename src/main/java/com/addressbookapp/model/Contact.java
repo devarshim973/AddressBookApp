@@ -1,15 +1,15 @@
 package com.addressbookapp.model;
 
-public class Contacts {
+public class Contact {
      private String firstName;
      private String lastName;
      private String address;
      private String city;
      private String state;
-     private int zip;
+     private String zip;
      private String phoneNo;
      private String email;
-	 public Contacts(String firstName, String lastName, String address, String city, String state, int zip,
+	 public Contact(String firstName, String lastName, String address, String city, String state, String zip,
 			String phoneNo, String email) {
 		super();
 		this.firstName = firstName;
@@ -36,8 +36,8 @@ public class Contacts {
 	 public String getState() { return state; }
 	 public void setState(String state) { this.state = state; }
 	 
-	 public int getZip() { return zip; }
-	 public void setZip(int zip) { this.zip = zip; }
+	 public String getZip() { return zip; }
+	 public void setZip(String zip) { this.zip = zip; }
 	 
 	 public String getPhoneNo() { return phoneNo; }
 	 public void setPhoneNo(String phoneNo) { this.phoneNo = phoneNo; }
