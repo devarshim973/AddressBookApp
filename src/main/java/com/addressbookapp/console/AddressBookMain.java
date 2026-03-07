@@ -1,9 +1,9 @@
-
 package com.addressbookapp.console;
 
 import com.addressbookapp.model.Contact;
 import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookSystem;
+import com.addressbookapp.util.AddressBookFileIO;
 
 import java.util.List;
 import java.util.Map;
@@ -79,6 +79,12 @@ public class AddressBookMain {
         
         System.out.println("\nContacts Sorted By Zip");
         displayContacts(addressBookSystem.getContactsSortedByZip());
+        
+        AddressBookFileIO fileIO = new AddressBookFileIO();
+        String fileName = "src/main/resources/files/addressbook-data.txt";
+
+        fileIO.writeContactsToFile(fileName, addressBookSystem.getAllContacts());
+        fileIO.readContactsFromFile(fileName);
     }
 
     private static Contact readContact(Scanner sc) {

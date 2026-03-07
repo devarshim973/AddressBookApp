@@ -135,4 +135,11 @@ public class AddressBookSystem {
                 .sorted(Comparator.comparing(Contact::getZip))
                 .collect(Collectors.toList());
     }
+    
+    public List<Contact> getAllContacts() {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .collect(Collectors.toList());
+    }
 }
