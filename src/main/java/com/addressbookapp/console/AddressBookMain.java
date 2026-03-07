@@ -1,3 +1,4 @@
+
 package com.addressbookapp.console;
 
 import com.addressbookapp.model.Contact;
@@ -68,6 +69,16 @@ public class AddressBookMain {
         System.out.println("\nContacts Sorted Alphabetically:");
         List<Contact> sortedContacts = addressBookSystem.getAllContactsSortedByName();
         displayContacts(sortedContacts);
+        
+        // Sorted by City, State & Zip -> (uc-12)
+        System.out.println("\nContacts Sorted By City");
+        displayContacts(addressBookSystem.getContactsSortedByCity());
+        
+        System.out.println("\nContacts Sorted By State");
+        displayContacts(addressBookSystem.getContactsSortedByState());
+        
+        System.out.println("\nContacts Sorted By Zip");
+        displayContacts(addressBookSystem.getContactsSortedByZip());
     }
 
     private static Contact readContact(Scanner sc) {

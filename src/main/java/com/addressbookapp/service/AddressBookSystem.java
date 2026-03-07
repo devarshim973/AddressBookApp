@@ -1,8 +1,8 @@
-
 package com.addressbookapp.service;
 
 import com.addressbookapp.model.Contact;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +101,38 @@ public class AddressBookSystem {
                     return c1.getLastName()
                             .compareToIgnoreCase(c2.getLastName());
                 })
+                .collect(Collectors.toList());
+    }
+    
+    // Sort by city -> (uc-12)
+    public List<Contact> getContactsSortedByCity() {
+
+        return addressBookMap.values()
+                .stream()
+                .flatMap(book -> book.getContactList().stream())
+                .sorted(Comparator.comparing(Contact::getCity,
+                        String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
+    }
+    
+    // Sort by State -> (uc-12)
+    public List<Contact> getContactsSortedByState() {
+
+        return addressBookMap.values()
+                .stream()
+                .flatMap(book -> book.getContactList().stream())
+                .sorted(Comparator.comparing(Contact::getState,
+                        String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
+    }
+    
+    // Sort by Zip -> (uc-12)
+    public List<Contact> getContactsSortedByZip() {
+
+        return addressBookMap.values()
+                .stream()
+                .flatMap(book -> book.getContactList().stream())
+                .sorted(Comparator.comparing(Contact::getZip))
                 .collect(Collectors.toList());
     }
 }
