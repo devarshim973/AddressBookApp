@@ -9,27 +9,36 @@ public class AddressBook {
 
     private final List<Contact> contactList = new ArrayList<>();
 
-    public void addContact(Contact contact) {
+    // Add Contacts
+    public boolean addContact(Contact contact) {
+        boolean isDuplicate = contactList.stream()
+                .anyMatch(existingContact -> existingContact.equals(contact));
+
+        if(isDuplicate) {
+            return false;
+        }
+
         contactList.add(contact);
-        System.out.println("Contact added successfully.");
+        return true;
     }
 
     public List<Contact> getContactList() {
         return contactList;
     }
 
+    // Print Contacts
     public void displayContact() {
         if(contactList.isEmpty()) {
             System.out.println("No contacts found.");
             return;
         }
 
-        System.out.println("\nAll Contacts:");
         for(Contact contact : contactList) {
             System.out.println(contact);
         }
     }
 
+    // Update Contacts by First Name
     public boolean editContactByFirstName(String firstName,
                                           String newLastName,
                                           String newAddress,
@@ -53,14 +62,16 @@ public class AddressBook {
         return false;
     }
 
+    // Deleting Contact using First Name
     public boolean deleteContactByFirstName(String firstName) {
-        for(int i=0; i<contactList.size(); i++) {
-            Contact contact = contactList.get(i);
-            if(contact.getFirstName().equalsIgnoreCase(firstName)) {
-                contactList.remove(i);
-                return true;
-            }
-        }
-        return false;
+        return contactList.removeIf(contact ->
+                contact.getFirstName().equalsIgnoreCase(firstName));
+    }
+
+    // Check if Person exists or not
+    public boolean isPersonExists(String firstName, String lastName) {
+        return contactList.stream().anyMatch(contact ->
+                contact.getFirstName().equalsIgnoreCase(firstName)
+                        && contact.getLastName().equalsIgnoreCase(lastName));
     }
 }
