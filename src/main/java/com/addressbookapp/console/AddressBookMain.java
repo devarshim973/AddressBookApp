@@ -8,6 +8,7 @@ import com.addressbookapp.util.AddressBookFileIO;
 import com.addressbookapp.util.AddressBookCSVIO;
 import com.addressbookapp.util.AddressBookJSONIO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -128,6 +129,20 @@ public class AddressBookMain {
 
         System.out.println("Is Contact Synced With DB? " + dbService2.isContactSyncedWithDB(contact));
         System.out.println("After Update From DB: " + dbService2.getContactByFirstName("Harshal"));
+        
+        // JDBC -> (uc-18)
+        // This is only for testing
+        AddressBookDBService dbService3 = new AddressBookDBService();
+
+        List<Contact> contactsByDate = dbService3.getContactsAddedBetweenDates(
+                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, 3, 7)
+        );
+
+        System.out.println("\nContacts added between 2026-03-01 and 2026-03-07:");
+        for(Contact con : contactsByDate) {
+            System.out.println(con);
+        }
     }
 
     private static Contact readContact(Scanner sc) {

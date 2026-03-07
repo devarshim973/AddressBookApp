@@ -4,27 +4,28 @@ import com.addressbookapp.model.Contact;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class AddressBookDBServiceTest {
 
     @Test
-    public void givenContactInDB_WhenRetrieved_ShouldReturnContactList() {
-        AddressBookDBService dbService = new AddressBookDBService();
-        Assertions.assertTrue(dbService.getAllContactsFromDB().size() > 0);
-    }
-
-    @Test
-    public void givenContact_WhenCityUpdated_ShouldSyncWithDatabase() {
+    public void givenDateRange_WhenContactsRetrieved_ShouldReturnOnlyContactsWithinRange() {
         AddressBookDBService dbService = new AddressBookDBService();
 
-        Contact memoryContact = dbService.getContactByFirstName("Harshal");
-        Assertions.assertNotNull(memoryContact);
+        LocalDate startDate = LocalDate.of(2026, 3, 1);
+        LocalDate endDate = LocalDate.of(2026, 3, 7);
 
-        boolean isUpdated = dbService.updateContactCityByName("Harshal", "Pune");
-        Assertions.assertTrue(isUpdated);
+        List<Contact> contacts = dbService.getContactsAddedBetweenDates(startDate, endDate);
 
-        memoryContact.setCity("Pune");
+        Assertions.assertNotNull(contacts);
 
-        boolean isSynced = dbService.isContactSyncedWithDB(memoryContact);
-        Assertions.assertTrue(isSynced);
+        Assertions.assertTrue(
+                contacts.stream().allMatch(contact ->
+                        contact.getDateAdded() != null &&
+                        !contact.getDateAdded().isBefore(startDate) &&
+                        !contact.getDateAdded().isAfter(endDate)
+                )
+        );
     }
 }

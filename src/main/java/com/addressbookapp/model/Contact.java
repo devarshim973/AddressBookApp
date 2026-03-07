@@ -1,6 +1,8 @@
 package com.addressbookapp.model;
 
 import java.util.Objects;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class Contact {
 	private int id;
@@ -12,6 +14,8 @@ public class Contact {
     private String zip;
     private String phoneNumber;
     private String email;
+    
+    private LocalDate date_added;
 
     public Contact() {
     }
@@ -29,6 +33,9 @@ public class Contact {
         this.email = email;
     }
 
+    public LocalDate getDateAdded() { return date_added; }
+    public void setDateAdded(LocalDate dateAdded) { this.date_added = dateAdded; }
+    
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     
@@ -71,7 +78,8 @@ public class Contact {
                 && Objects.equals(state, other.state)
                 && Objects.equals(zip, other.zip)
                 && Objects.equals(phoneNumber, other.phoneNumber)
-                && Objects.equals(email, other.email);
+                && Objects.equals(email, other.email)
+                && Objects.equals(date_added, other.date_added);
     }
 
     @Override
@@ -87,6 +95,7 @@ public class Contact {
                 " | State: " + state +
                 " | Zip: " + zip +
                 " | Phone: " + phoneNumber +
-                " | Email: " + email;
+                " | Email: " + email +
+                " | dateAdded: " + (date_added != null ? date_added : "N/A");
     }
 }
