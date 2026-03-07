@@ -176,4 +176,92 @@ public class AddressBookDBService {
 
         return stateCountMap;
     }
+    
+    public boolean addContactToDatabase(String addressBookName, Contact contact) {
+        String insertAddressBookQuery = "INSERT INTO address_books(name) VALUES(?)";
+        String getAddressBookIdQuery = "SELECT id FROM address_books WHERE name = ?";
+        String insertContactQuery = "INSERT INTO contacts(first_name, last_name, address, city, state, zip, phone_number, email, date_added, address_book_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        Connection connection = null;
+
+        try{
+            connection = DBConnection.getConnection();
+            connection.setAutoCommit(false);
+
+            int addressBookId = -1;
+
+            // Step 1: check if address book already exists
+            try(PreparedStatement preparedStatement = connection.prepareStatement(getAddressBookIdQuery)) {
+                preparedStatement.setString(1, addressBookName);
+
+                try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if(resultSet.next()) {
+                        addressBookId = resultSet.getInt("id");
+                    }
+                }
+            }
+
+            // Step 2: if not exists, insert address book
+            if(addressBookId == -1) {
+                try(PreparedStatement preparedStatement = connection.prepareStatement(insertAddressBookQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    preparedStatement.setString(1, addressBookName);
+                    preparedStatement.executeUpdate();
+
+                    try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                        if(generatedKeys.next()) {
+                            addressBookId = generatedKeys.getInt(1);
+                        }
+                    }
+                }
+            }
+
+            // Step 3: insert contact
+            try(PreparedStatement preparedStatement = connection.prepareStatement(insertContactQuery)) {
+                preparedStatement.setString(1, contact.getFirstName());
+                preparedStatement.setString(2, contact.getLastName());
+                preparedStatement.setString(3, contact.getAddress());
+                preparedStatement.setString(4, contact.getCity());
+                preparedStatement.setString(5, contact.getState());
+                preparedStatement.setString(6, contact.getZip());
+                preparedStatement.setString(7, contact.getPhoneNumber());
+                preparedStatement.setString(8, contact.getEmail());
+
+                if(contact.getDateAdded() != null) {
+                    preparedStatement.setDate(9, java.sql.Date.valueOf(contact.getDateAdded()));
+                }else{
+                    preparedStatement.setDate(9, java.sql.Date.valueOf(java.time.LocalDate.now()));
+                }
+
+                preparedStatement.setInt(10, addressBookId);
+
+                preparedStatement.executeUpdate();
+            }
+
+            connection.commit();
+            return true;
+
+        }catch(SQLException e) {
+            try{
+                if(connection != null) {
+                    connection.rollback();
+                }
+            }catch(SQLException rollbackException) {
+                System.out.println("Rollback failed: " + rollbackException.getMessage());
+            }
+
+            System.out.println("Transaction failed: " + e.getMessage());
+            return false;
+
+        }finally{
+            try{
+                if(connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            }catch(SQLException e) {
+                System.out.println("Error closing connection: " + e.getMessage());
+            }
+        }
+    }
 }

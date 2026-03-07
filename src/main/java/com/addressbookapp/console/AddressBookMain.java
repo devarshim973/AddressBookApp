@@ -161,6 +161,22 @@ public class AddressBookMain {
         for (Map.Entry<String, Integer> entry : stateCount.entrySet()) {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         }
+        
+        // JDBC -> (uc-20)
+        Contact newContact = new Contact();
+        newContact.setFirstName("Rohit");
+        newContact.setLastName("Patel");
+        newContact.setAddress("Shivaji Nagar");
+        newContact.setCity("Bhopal");
+        newContact.setState("MP");
+        newContact.setZip("462001");
+        newContact.setPhoneNumber("9876543210");
+        newContact.setEmail("rohitpatel@gmail.com");
+        newContact.setDateAdded(java.time.LocalDate.now());
+
+        boolean isAdded = dbService.addContactToDatabase("Family", newContact);
+
+        System.out.println("Contact added to DB: " + isAdded);
     }
 
     private static Contact readContact(Scanner sc) {

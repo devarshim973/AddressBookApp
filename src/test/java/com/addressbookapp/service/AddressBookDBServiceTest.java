@@ -28,4 +28,27 @@ public class AddressBookDBServiceTest {
                 )
         );
     }
+    
+    @Test
+    public void givenNewContact_WhenAddedToDatabase_ShouldBeRetrievable() {
+        AddressBookDBService dbService = new AddressBookDBService();
+
+        Contact contact = new Contact();
+        contact.setFirstName("TxnUser");
+        contact.setLastName("Demo");
+        contact.setAddress("Txn Address");
+        contact.setCity("Bhopal");
+        contact.setState("MP");
+        contact.setZip("462001");
+        contact.setPhoneNumber("1234567890");
+        contact.setEmail("txnuser@gmail.com");
+        contact.setDateAdded(LocalDate.now());
+
+        boolean isAdded = dbService.addContactToDatabase("TxnBook", contact);
+        Assertions.assertTrue(isAdded);
+
+        Contact dbContact = dbService.getContactByFirstName("TxnUser");
+        Assertions.assertNotNull(dbContact);
+        Assertions.assertEquals("TxnUser", dbContact.getFirstName());
+    }
 }
