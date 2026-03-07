@@ -5,6 +5,7 @@ import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookSystem;
 import com.addressbookapp.util.AddressBookFileIO;
 import com.addressbookapp.util.AddressBookCSVIO;
+import com.addressbookapp.util.AddressBookJSONIO;
 
 import java.util.List;
 import java.util.Map;
@@ -88,12 +89,19 @@ public class AddressBookMain {
         fileIO.writeContactsToFile(fileName, addressBookSystem.getAllContacts());
         fileIO.readContactsFromFile(fileName);
         
-        // csv-read-write-opencsv
+        // csv-read-write-opencsv -> (uc-14)
         AddressBookCSVIO csvIO = new AddressBookCSVIO();
         String csvFile = "src/main/resources/files/addressbook-data.csv";
 
         csvIO.writeContactsToCSV(csvFile, addressBookSystem.getAllContacts());
         csvIO.readContactsFromCSV(csvFile);
+        
+        // json-read-write-gson -> (uc-15)
+        AddressBookJSONIO jsonIO = new AddressBookJSONIO();
+        String jsonFile = "src/main/resources/files/addressbook-data.json";
+
+        jsonIO.writeContactsToJSON(jsonFile, addressBookSystem.getAllContacts());
+        jsonIO.readContactsFromJSON(jsonFile);
     }
 
     private static Contact readContact(Scanner sc) {
