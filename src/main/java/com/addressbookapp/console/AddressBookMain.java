@@ -4,6 +4,7 @@ import com.addressbookapp.model.Contact;
 import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookSystem;
 import com.addressbookapp.util.AddressBookFileIO;
+import com.addressbookapp.util.AddressBookCSVIO;
 
 import java.util.List;
 import java.util.Map;
@@ -80,11 +81,19 @@ public class AddressBookMain {
         System.out.println("\nContacts Sorted By Zip");
         displayContacts(addressBookSystem.getContactsSortedByZip());
         
+        // file-io-read-write -> (uc-13)
         AddressBookFileIO fileIO = new AddressBookFileIO();
         String fileName = "src/main/resources/files/addressbook-data.txt";
 
         fileIO.writeContactsToFile(fileName, addressBookSystem.getAllContacts());
         fileIO.readContactsFromFile(fileName);
+        
+        // csv-read-write-opencsv
+        AddressBookCSVIO csvIO = new AddressBookCSVIO();
+        String csvFile = "src/main/resources/files/addressbook-data.csv";
+
+        csvIO.writeContactsToCSV(csvFile, addressBookSystem.getAllContacts());
+        csvIO.readContactsFromCSV(csvFile);
     }
 
     private static Contact readContact(Scanner sc) {
