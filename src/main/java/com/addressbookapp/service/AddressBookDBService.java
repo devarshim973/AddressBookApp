@@ -8,8 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AddressBookDBService {
 
@@ -128,5 +127,53 @@ public class AddressBookDBService {
         }
 
         return contact;
+    }
+    
+    public Map<String, Integer> getContactCountByCity() {
+
+        Map<String, Integer> cityCountMap = new HashMap<>();
+
+        String query = "SELECT city, COUNT(*) AS total_contacts FROM contacts GROUP BY city";
+
+        try(Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while(resultSet.next()) {
+                String city = resultSet.getString("city");
+                int count = resultSet.getInt("total_contacts");
+
+                cityCountMap.put(city, count);
+            }
+
+        }catch(SQLException e) {
+            System.out.println("Error retrieving count by city: " + e.getMessage());
+        }
+
+        return cityCountMap;
+    }
+    
+    public Map<String, Integer> getContactCountByState() {
+
+        Map<String, Integer> stateCountMap = new HashMap<>();
+
+        String query = "SELECT state, COUNT(*) AS total_contacts FROM contacts GROUP BY state";
+
+        try(Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while(resultSet.next()) {
+                String state = resultSet.getString("state");
+                int count = resultSet.getInt("total_contacts");
+
+                stateCountMap.put(state, count);
+            }
+
+        }catch(SQLException e) {
+            System.out.println("Error retrieving count by state: " + e.getMessage());
+        }
+
+        return stateCountMap;
     }
 }

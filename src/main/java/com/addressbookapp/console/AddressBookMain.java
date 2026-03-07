@@ -143,6 +143,24 @@ public class AddressBookMain {
         for(Contact con : contactsByDate) {
             System.out.println(con);
         }
+        
+        // JDBC -> (uc-19)
+        // This is only for testing
+        // Count by City
+        Map<String, Integer> cityCount = dbService.getContactCountByCity();
+
+        System.out.println("\nContact Count By City From Database:");
+        for(Map.Entry<String, Integer> entry : cityCount.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+        
+        // Count by State
+        Map<String, Integer> stateCount = dbService.getContactCountByState();
+
+        System.out.println("\nContact Count By State From Database:");
+        for (Map.Entry<String, Integer> entry : stateCount.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
     }
 
     private static Contact readContact(Scanner sc) {
