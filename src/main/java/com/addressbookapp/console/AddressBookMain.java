@@ -2,6 +2,7 @@ package com.addressbookapp.console;
 
 import com.addressbookapp.model.Contact;
 import com.addressbookapp.service.AddressBook;
+import com.addressbookapp.service.AddressBookDBService;
 import com.addressbookapp.service.AddressBookSystem;
 import com.addressbookapp.util.AddressBookFileIO;
 import com.addressbookapp.util.AddressBookCSVIO;
@@ -102,6 +103,15 @@ public class AddressBookMain {
 
         jsonIO.writeContactsToJSON(jsonFile, addressBookSystem.getAllContacts());
         jsonIO.readContactsFromJSON(jsonFile);
+        
+        // JDBC -> (uc-16)
+        AddressBookDBService dbService = new AddressBookDBService();
+        List<Contact> dbContacts = dbService.getAllContactsFromDB();
+
+        System.out.println("\nContacts Retrieved From Database:");
+        for (Contact contact : dbContacts) {
+            System.out.println(contact);
+        }
     }
 
     private static Contact readContact(Scanner sc) {
