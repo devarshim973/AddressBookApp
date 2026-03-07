@@ -4,7 +4,8 @@ import com.addressbookapp.model.Contact;
 import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookSystem;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 public class AddressBookMain {
 
@@ -14,7 +15,7 @@ public class AddressBookMain {
 
         System.out.println("Welcome to Address Book Program");
 
-        String choice;
+        String addressBookChoice;
 
         do{
             System.out.print("\nEnter Address Book Name: ");
@@ -24,16 +25,15 @@ public class AddressBookMain {
 
             if(!isAdded) {
                 System.out.println("Address Book with this name already exists.");
-            }else {
+            }else{
                 System.out.println("Address Book added successfully.");
             }
 
             AddressBook addressBook = addressBookSystem.getAddressBook(addressBookName);
 
-            String addContactChoice;
+            String contactChoice;
             do{
                 Contact contact = readContact(sc);
-
                 boolean isContactAdded = addressBook.addContact(contact);
 
                 if(isContactAdded) {
@@ -43,22 +43,31 @@ public class AddressBookMain {
                 }
 
                 System.out.print("Do you want to add another contact to " + addressBookName + "? (yes/no): ");
-                addContactChoice = sc.nextLine();
+                contactChoice = sc.nextLine();
 
-            } while(addContactChoice.equalsIgnoreCase("yes"));
+            } while(contactChoice.equalsIgnoreCase("yes"));
 
             System.out.print("Do you want to add another Address Book? (yes/no): ");
-            choice = sc.nextLine();
+            addressBookChoice = sc.nextLine();
 
-        } while(choice.equalsIgnoreCase("yes"));
+        } while(addressBookChoice.equalsIgnoreCase("yes"));
 
-        System.out.println("\nContacts in each Address Book:");
-        for(String name : addressBookSystem.getAddressBookMap().keySet()) {
-            System.out.println("\nAddress Book: " + name);
-            addressBookSystem.getAddressBook(name).displayContact();
-        }
+        // Search by city
+        System.out.print("\nEnter city to search persons: ");
+        String city = sc.nextLine();
 
-        sc.close();
+        List<Contact> cityResults = addressBookSystem.searchPersonsByCity(city);
+        System.out.println("\nPersons found in city: " + city);
+        displaySearchResults(cityResults);
+
+        // Search by state
+        System.out.print("\nEnter state to search persons: ");
+        String state = sc.nextLine();
+
+        List<Contact> stateResults = addressBookSystem.searchPersonsByState(state);
+        System.out.println("\nPersons found in state: " + state);
+        displaySearchResults(stateResults);
+        
     }
 
     private static Contact readContact(Scanner sc) {
@@ -89,5 +98,16 @@ public class AddressBookMain {
         String email = sc.nextLine();
 
         return new Contact(firstName, lastName, address, city, state, zip, phoneNumber, email);
+    }
+
+    private static void displaySearchResults(List<Contact> contacts) {
+        if(contacts.isEmpty()) {
+            System.out.println("No persons found.");
+            return;
+        }
+
+        for(Contact contact : contacts) {
+            System.out.println(contact);
+        }
     }
 }

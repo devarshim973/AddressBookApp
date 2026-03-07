@@ -1,7 +1,11 @@
 package com.addressbookapp.service;
 
+import com.addressbookapp.model.Contact;
+
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AddressBookSystem {
 
@@ -20,6 +24,10 @@ public class AddressBookSystem {
         return addressBookMap.get(addressBookName);
     }
 
+    public Map<String, AddressBook> getAddressBookMap() {
+        return addressBookMap;
+    }
+
     public void displayAddressBooks() {
         if(addressBookMap.isEmpty()) {
             System.out.println("No address books found.");
@@ -32,7 +40,19 @@ public class AddressBookSystem {
         }
     }
 
-    public Map<String, AddressBook> getAddressBookMap() {
-        return addressBookMap;
+    public List<Contact> searchPersonsByCity(String city) {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .filter(contact -> contact.getCity().equalsIgnoreCase(city))
+                .collect(Collectors.toList());
+    }
+
+    public List<Contact> searchPersonsByState(String state) {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .filter(contact -> contact.getState().equalsIgnoreCase(state))
+                .collect(Collectors.toList());
     }
 }
