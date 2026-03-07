@@ -4,6 +4,7 @@ import com.addressbookapp.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddressBook {
 
@@ -73,5 +74,23 @@ public class AddressBook {
         return contactList.stream().anyMatch(contact ->
                 contact.getFirstName().equalsIgnoreCase(firstName)
                         && contact.getLastName().equalsIgnoreCase(lastName));
+    }
+    
+    // Sort Contacts using Name
+    public List<Contact> getContactsSortedByName() {
+
+        return contactList.stream()
+                .sorted((c1, c2) -> {
+                    int firstNameCompare = c1.getFirstName()
+                            .compareToIgnoreCase(c2.getFirstName());
+
+                    if(firstNameCompare != 0) {
+                        return firstNameCompare;
+                    }
+
+                    return c1.getLastName()
+                            .compareToIgnoreCase(c2.getLastName());
+                })
+                .collect(Collectors.toList());
     }
 }

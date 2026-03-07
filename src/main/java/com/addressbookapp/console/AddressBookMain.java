@@ -64,6 +64,10 @@ public class AddressBookMain {
 
         System.out.println("\nContact Count By State:");
         displayCount(addressBookSystem.getContactCountByState());
+        
+        System.out.println("\nContacts Sorted Alphabetically:");
+        List<Contact> sortedContacts = addressBookSystem.getAllContactsSortedByName();
+        displayContacts(sortedContacts);
     }
 
     private static Contact readContact(Scanner sc) {
@@ -119,6 +123,18 @@ public class AddressBookMain {
 
         for(Map.Entry<String, Long> entry : countMap.entrySet()) {
             System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+    
+    private static void displayContacts(List<Contact> contacts) {
+
+        if(contacts.isEmpty()) {
+            System.out.println("No contacts found.");
+            return;
+        }
+
+        for(Contact contact : contacts) {
+            System.out.println(contact);
         }
     }
 }
