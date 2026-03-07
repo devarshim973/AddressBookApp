@@ -1,5 +1,6 @@
 package com.addressbookapp.console;
 
+import java.util.*;
 import com.addressbookapp.model.Contact;
 import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookDBService;
@@ -105,78 +106,48 @@ public class AddressBookMain {
         jsonIO.writeContactsToJSON(jsonFile, addressBookSystem.getAllContacts());
         jsonIO.readContactsFromJSON(jsonFile);
         
-        // JDBC -> (uc-16)
+        // JDBC -> (uc-21)
         AddressBookDBService dbService = new AddressBookDBService();
-        List<Contact> dbContacts = dbService.getAllContactsFromDB();
+        List<Contact> contactList = new ArrayList<>();
 
-        System.out.println("\nContacts Retrieved From Database:");
-        for (Contact contact : dbContacts) {
-            System.out.println(contact);
-        }
-        
-        // JDBC -> (uc-17)
-        // This is optional, but useful for your own check.
-        AddressBookDBService dbService2 = new AddressBookDBService();
+        Contact c1 = new Contact();
+        c1.setFirstName("Rohit");
+        c1.setLastName("Sharma");
+        c1.setAddress("Arera Colony");
+        c1.setCity("Bhopal");
+        c1.setState("MP");
+        c1.setZip("462016");
+        c1.setPhoneNumber("9991112222");
+        c1.setEmail("rohit@gmail.com");
+        c1.setDateAdded(java.time.LocalDate.now());
 
-        Contact contact = dbService2.getContactByFirstName("Harshal");
-        System.out.println("Before Update: " + contact);
+        Contact c2 = new Contact();
+        c2.setFirstName("Neha");
+        c2.setLastName("Patel");
+        c2.setAddress("Vijay Nagar");
+        c2.setCity("Indore");
+        c2.setState("MP");
+        c2.setZip("452010");
+        c2.setPhoneNumber("8882223333");
+        c2.setEmail("neha@gmail.com");
+        c2.setDateAdded(java.time.LocalDate.now());
 
-        boolean updated = dbService2.updateContactCityByName("Harshal", "Pune");
+        Contact c3 = new Contact();
+        c3.setFirstName("Sneha");
+        c3.setLastName("Joshi");
+        c3.setAddress("Shivaji Nagar");
+        c3.setCity("Pune");
+        c3.setState("MH");
+        c3.setZip("411001");
+        c3.setPhoneNumber("7773334444");
+        c3.setEmail("sneha@gmail.com");
+        c3.setDateAdded(java.time.LocalDate.now());
 
-        if(updated && contact != null) {
-            contact.setCity("Pune");
-        }
+        contactList.add(c1);
+        contactList.add(c2);
+        contactList.add(c3);
 
-        System.out.println("Is Contact Synced With DB? " + dbService2.isContactSyncedWithDB(contact));
-        System.out.println("After Update From DB: " + dbService2.getContactByFirstName("Harshal"));
-        
-        // JDBC -> (uc-18)
-        // This is only for testing
-        AddressBookDBService dbService3 = new AddressBookDBService();
-
-        List<Contact> contactsByDate = dbService3.getContactsAddedBetweenDates(
-                LocalDate.of(2026, 3, 1),
-                LocalDate.of(2026, 3, 7)
-        );
-
-        System.out.println("\nContacts added between 2026-03-01 and 2026-03-07:");
-        for(Contact con : contactsByDate) {
-            System.out.println(con);
-        }
-        
-        // JDBC -> (uc-19)
-        // This is only for testing
-        // Count by City
-        Map<String, Integer> cityCount = dbService.getContactCountByCity();
-
-        System.out.println("\nContact Count By City From Database:");
-        for(Map.Entry<String, Integer> entry : cityCount.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-        
-        // Count by State
-        Map<String, Integer> stateCount = dbService.getContactCountByState();
-
-        System.out.println("\nContact Count By State From Database:");
-        for (Map.Entry<String, Integer> entry : stateCount.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-        
-        // JDBC -> (uc-20)
-        Contact newContact = new Contact();
-        newContact.setFirstName("Rohit");
-        newContact.setLastName("Patel");
-        newContact.setAddress("Shivaji Nagar");
-        newContact.setCity("Bhopal");
-        newContact.setState("MP");
-        newContact.setZip("462001");
-        newContact.setPhoneNumber("9876543210");
-        newContact.setEmail("rohitpatel@gmail.com");
-        newContact.setDateAdded(java.time.LocalDate.now());
-
-        boolean isAdded = dbService.addContactToDatabase("Family", newContact);
-
-        System.out.println("Contact added to DB: " + isAdded);
+        dbService.addMultipleContactsToDatabase("ThreadBook", contactList);
     }
 
     private static Contact readContact(Scanner sc) {
