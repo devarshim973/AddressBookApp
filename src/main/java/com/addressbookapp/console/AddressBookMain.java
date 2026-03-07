@@ -59,7 +59,11 @@ public class AddressBookMain {
         System.out.println("\nPersons Grouped By State:");
         displayGroupedPersons(addressBookSystem.getPersonsByState());
 
-        sc.close();
+        System.out.println("\nContact Count By City:");
+        displayCount(addressBookSystem.getContactCountByCity());
+
+        System.out.println("\nContact Count By State:");
+        displayCount(addressBookSystem.getContactCountByState());
     }
 
     private static Contact readContact(Scanner sc) {
@@ -103,6 +107,18 @@ public class AddressBookMain {
             for(Contact contact : entry.getValue()) {
                 System.out.println(contact);
             }
+        }
+    }
+    
+    private static void displayCount(Map<String, Long> countMap) {
+
+        if(countMap.isEmpty()) {
+            System.out.println("No contacts found.");
+            return;
+        }
+
+        for(Map.Entry<String, Long> entry : countMap.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
         }
     }
 }

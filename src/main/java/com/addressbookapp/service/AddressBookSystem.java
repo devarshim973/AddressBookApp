@@ -69,4 +69,18 @@ public class AddressBookSystem {
                 .flatMap(addressBook -> addressBook.getContactList().stream())
                 .collect(Collectors.groupingBy(Contact::getState));
     }
+    
+    public Map<String, Long> getContactCountByCity() {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .collect(Collectors.groupingBy(Contact::getCity, Collectors.counting()));
+    }
+
+    public Map<String, Long> getContactCountByState() {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .collect(Collectors.groupingBy(Contact::getState, Collectors.counting()));
+    }
 }
