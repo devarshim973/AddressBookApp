@@ -5,6 +5,7 @@ import com.addressbookapp.service.AddressBook;
 import com.addressbookapp.service.AddressBookSystem;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class AddressBookMain {
@@ -25,7 +26,7 @@ public class AddressBookMain {
 
             if(!isAdded) {
                 System.out.println("Address Book with this name already exists.");
-            }else{
+            }else {
                 System.out.println("Address Book added successfully.");
             }
 
@@ -38,7 +39,7 @@ public class AddressBookMain {
 
                 if(isContactAdded) {
                     System.out.println("Contact added successfully.");
-                }else {
+                }else{
                     System.out.println("Duplicate contact found. Contact not added.");
                 }
 
@@ -50,24 +51,15 @@ public class AddressBookMain {
             System.out.print("Do you want to add another Address Book? (yes/no): ");
             addressBookChoice = sc.nextLine();
 
-        } while(addressBookChoice.equalsIgnoreCase("yes"));
+        }while(addressBookChoice.equalsIgnoreCase("yes"));
 
-        // Search by city
-        System.out.print("\nEnter city to search persons: ");
-        String city = sc.nextLine();
+        System.out.println("\nPersons Grouped By City:");
+        displayGroupedPersons(addressBookSystem.getPersonsByCity());
 
-        List<Contact> cityResults = addressBookSystem.searchPersonsByCity(city);
-        System.out.println("\nPersons found in city: " + city);
-        displaySearchResults(cityResults);
+        System.out.println("\nPersons Grouped By State:");
+        displayGroupedPersons(addressBookSystem.getPersonsByState());
 
-        // Search by state
-        System.out.print("\nEnter state to search persons: ");
-        String state = sc.nextLine();
-
-        List<Contact> stateResults = addressBookSystem.searchPersonsByState(state);
-        System.out.println("\nPersons found in state: " + state);
-        displaySearchResults(stateResults);
-        
+        sc.close();
     }
 
     private static Contact readContact(Scanner sc) {
@@ -100,14 +92,17 @@ public class AddressBookMain {
         return new Contact(firstName, lastName, address, city, state, zip, phoneNumber, email);
     }
 
-    private static void displaySearchResults(List<Contact> contacts) {
-        if(contacts.isEmpty()) {
+    private static void displayGroupedPersons(Map<String, List<Contact>> groupedData) {
+        if(groupedData.isEmpty()) {
             System.out.println("No persons found.");
             return;
         }
 
-        for(Contact contact : contacts) {
-            System.out.println(contact);
+        for(Map.Entry<String, List<Contact>> entry : groupedData.entrySet()) {
+            System.out.println("\n" + entry.getKey() + ":");
+            for(Contact contact : entry.getValue()) {
+                System.out.println(contact);
+            }
         }
     }
 }

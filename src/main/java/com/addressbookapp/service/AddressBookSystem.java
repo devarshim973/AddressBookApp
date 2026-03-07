@@ -55,4 +55,18 @@ public class AddressBookSystem {
                 .filter(contact -> contact.getState().equalsIgnoreCase(state))
                 .collect(Collectors.toList());
     }
+
+    public Map<String, List<Contact>> getPersonsByCity() {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .collect(Collectors.groupingBy(Contact::getCity));
+    }
+
+    public Map<String, List<Contact>> getPersonsByState() {
+        return addressBookMap.values()
+                .stream()
+                .flatMap(addressBook -> addressBook.getContactList().stream())
+                .collect(Collectors.groupingBy(Contact::getState));
+    }
 }
