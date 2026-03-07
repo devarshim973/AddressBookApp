@@ -58,16 +58,25 @@ public class Contact {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Contact)) return false;
+        if(this == obj) return true;
+        if(!(obj instanceof Contact)) return false;
+
         Contact other = (Contact) obj;
-        return firstName.equalsIgnoreCase(other.firstName)
-                && lastName.equalsIgnoreCase(other.lastName);
+
+        return id == other.id
+                && Objects.equals(firstName, other.firstName)
+                && Objects.equals(lastName, other.lastName)
+                && Objects.equals(address, other.address)
+                && Objects.equals(city, other.city)
+                && Objects.equals(state, other.state)
+                && Objects.equals(zip, other.zip)
+                && Objects.equals(phoneNumber, other.phoneNumber)
+                && Objects.equals(email, other.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName.toLowerCase(), lastName.toLowerCase());
+        return Objects.hash(id, firstName, lastName, address, city, state, zip, phoneNumber, email);
     }
     
     @Override

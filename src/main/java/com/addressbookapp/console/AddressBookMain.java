@@ -112,6 +112,22 @@ public class AddressBookMain {
         for (Contact contact : dbContacts) {
             System.out.println(contact);
         }
+        
+        // JDBC -> (uc-17)
+        // This is optional, but useful for your own check.
+        AddressBookDBService dbService2 = new AddressBookDBService();
+
+        Contact contact = dbService2.getContactByFirstName("Harshal");
+        System.out.println("Before Update: " + contact);
+
+        boolean updated = dbService2.updateContactCityByName("Harshal", "Pune");
+
+        if(updated && contact != null) {
+            contact.setCity("Pune");
+        }
+
+        System.out.println("Is Contact Synced With DB? " + dbService2.isContactSyncedWithDB(contact));
+        System.out.println("After Update From DB: " + dbService2.getContactByFirstName("Harshal"));
     }
 
     private static Contact readContact(Scanner sc) {

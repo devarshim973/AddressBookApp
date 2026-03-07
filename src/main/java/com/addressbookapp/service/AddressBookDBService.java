@@ -22,17 +22,7 @@ public class AddressBookDBService {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while(resultSet.next()) {
-                Contact contact = new Contact();
-                contact.setId(resultSet.getInt("id"));
-                contact.setFirstName(resultSet.getString("first_name"));
-                contact.setLastName(resultSet.getString("last_name"));
-                contact.setAddress(resultSet.getString("address"));
-                contact.setCity(resultSet.getString("city"));
-                contact.setState(resultSet.getString("state"));
-                contact.setZip(resultSet.getString("zip"));
-                contact.setPhoneNumber(resultSet.getString("phone_number"));
-                contact.setEmail(resultSet.getString("email"));
-
+                Contact contact = mapResultSetToContact(resultSet);
                 contactList.add(contact);
             }
 
@@ -41,5 +31,84 @@ public class AddressBookDBService {
         }
 
         return contactList;
+    }
+
+    public Contact getContactByFirstName(String firstName) {
+        String query = "SELECT id, first_name, last_name, address, city, state, zip, phone_number, email " +
+                "FROM contacts WHERE first_name = ?";
+
+        try(Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, firstName);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    return mapResultSetToContact(resultSet);
+                }
+            }
+
+        }catch(SQLException e) {
+            System.out.println("Error while fetching contact by name: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public boolean updateContactCityByName(String firstName, String newCity) {
+        String query = "UPDATE contacts SET city = ? WHERE first_name = ?";
+
+        try(Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, newCity);
+            preparedStatement.setString(2, firstName);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        }catch(SQLException e) {
+            System.out.println("Error while updating contact city: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean updateContactPhoneByName(String firstName, String newPhoneNumber) {
+        String query = "UPDATE contacts SET phone_number = ? WHERE first_name = ?";
+
+        try(Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, newPhoneNumber);
+            preparedStatement.setString(2, firstName);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        }catch(SQLException e) {
+            System.out.println("Error while updating contact phone number: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean isContactSyncedWithDB(Contact memoryContact) {
+        Contact dbContact = getContactByFirstName(memoryContact.getFirstName());
+        return memoryContact != null && memoryContact.equals(dbContact);
+    }
+
+    private Contact mapResultSetToContact(ResultSet resultSet) throws SQLException {
+        Contact contact = new Contact();
+        contact.setId(resultSet.getInt("id"));
+        contact.setFirstName(resultSet.getString("first_name"));
+        contact.setLastName(resultSet.getString("last_name"));
+        contact.setAddress(resultSet.getString("address"));
+        contact.setCity(resultSet.getString("city"));
+        contact.setState(resultSet.getString("state"));
+        contact.setZip(resultSet.getString("zip"));
+        contact.setPhoneNumber(resultSet.getString("phone_number"));
+        contact.setEmail(resultSet.getString("email"));
+        return contact;
     }
 }
